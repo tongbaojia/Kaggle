@@ -79,7 +79,7 @@ def training(data, name="xgb_temp", optimize=False, rankplot=False):
         #xgb_temp = modelfit(neigh, data, useTrainCV=False)
     
     ##save model
-    joblib.dump(xgb_temp, name + ".joblib.dat")
+    joblib.dump(xgb_temp, "Model/" + name + ".joblib.dat")
     ##load model
     #loaded_model = joblib.load("pima.joblib.dat")
     
