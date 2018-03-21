@@ -43,15 +43,17 @@ def pack_data(df, keyword="Survived", split=0.05, shuffle=True, SEED = 24):
     seed for reproducibility
     '''
     data = {}
-    train_t, test_t = train_test_split(df, train_size=1 - split, test_size=split, random_state=SEED, shuffle=shuffle)
-    train_t, val_t  = train_test_split(train_t, train_size=1 - split, test_size=split, shuffle=False)
-    data["X_train"] = train_t.drop(keyword, axis=1)
-    data["y_train"] = train_t[keyword]
+    df_X = df.drop(keyword, axis=1).copy()
+    df_y = df[keyword].copy()
+    X_train, X_test, y_train, y_test = train_test_split(df_X, df_y, train_size=1 - split, test_size=split, random_state=SEED, shuffle=shuffle, stratify=df_y)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, train_size=1 - split, test_size=split, random_state=SEED, shuffle=shuffle, stratify=y_train)
+    data["X_train"] = X_train
+    data["y_train"] = y_train
     #print(data["y_train"])
-    data["X_val"]   = val_t.drop(keyword, axis=1)
-    data["y_val"]   = val_t[keyword]
-    data["X_test"]  = test_t.drop(keyword, axis=1)
-    data["y_test"]  = test_t[keyword]
+    data["X_val"]   = X_val
+    data["y_val"]   = y_val
+    data["X_test"]  = X_test
+    data["y_test"]  = y_test
     return data
 
 def upsample_data(df, keyword="Survived"):

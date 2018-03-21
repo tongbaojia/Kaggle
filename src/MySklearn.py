@@ -1,12 +1,14 @@
 import numpy as np
 from sklearn.cross_validation import KFold
+from sklearn import metrics
 
 SEED = 24 # for reproducibility
 NFOLDS = 5 # set folds for out-of-fold prediction
 
 class SklearnHelper(object):
-    def __init__(self, clf, seed=SEED, params=None):
+    def __init__(self, clf, seed=SEED, params=None, name=""):
         self.clf = clf(**params)
+        self.name = name
 
     def train(self, x_train, y_train):
         self.clf.fit(x_train, y_train)
@@ -39,5 +41,7 @@ def get_oof(clf, x_train, y_train, x_test):
         oof_train[test_index] = clf.predict(x_te)
         oof_test_skf[i, :] = clf.predict(x_test)
 
+    print(clf.name, "%.3f" % metrics.accuracy_score(y_train, clf.predict(x_train)))
     oof_test[:] = oof_test_skf.mean(axis=0)
+    
     return oof_train.reshape(-1, 1), oof_test.reshape(-1, 1)
